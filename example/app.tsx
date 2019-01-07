@@ -18,13 +18,7 @@ class Portal extends React.Component {
 
   render() {
     return ReactDOM.createPortal(
-      <Click.Consumer>
-        {events => (
-          <div>
-            {this.props.children}
-          </div>
-        )}
-      </Click.Consumer>,
+      <div>{this.props.children}</div>,
       this.el
     )
   }

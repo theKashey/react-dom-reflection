@@ -1,7 +1,7 @@
 import {FiberNode, FiberTag} from '../types';
 
-const tagToType = (type: number): FiberTag => {
-  switch (type) {
+const tagToType = (tag: number, type: any): FiberTag => {
+  switch (tag) {
     case 3:
       return 'root';
     case 4:
@@ -17,6 +17,9 @@ const tagToType = (type: number): FiberTag => {
     case 13:
       return 'suspense';
     default:
+      if (typeof type === 'string') {
+        return 'node';
+      }
       return 'unknown'
   }
 }
@@ -24,11 +27,14 @@ const tagToType = (type: number): FiberTag => {
 const cast = (fiber: any): FiberNode => ({
   stateNode: fiber.stateNode,
   type: fiber.type,
-  tag: tagToType(fiber.tag),
+  tag: tagToType(fiber.tag, fiber.type),
   elementType: fiber.elementType || fiber.type,
   props: fiber.memoizedProps,
-  children: []
-});
+  children: [],
+
+  // hide it
+  source: fiber,
+} as any);
 
 export const fiber16Stack = (node: any): FiberNode => {
   const stack = cast(node);
